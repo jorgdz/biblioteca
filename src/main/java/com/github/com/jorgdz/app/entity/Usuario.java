@@ -1,13 +1,11 @@
 package com.github.com.jorgdz.app.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,6 +18,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "usuarios")
@@ -43,6 +43,7 @@ public class Usuario implements Serializable {
 	private String correo;
 	
 	@NotEmpty
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String clave;
 	
 	private boolean enabled;
@@ -51,14 +52,17 @@ public class Usuario implements Serializable {
 	@ManyToMany
 	@JoinTable(name = "roles_usuarios", joinColumns = @JoinColumn(name="usuario_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name="rol_id", referencedColumnName = "id"))
 	@JsonIgnoreProperties({"usuarios"})
-	private Collection<Rol> roles;
+	private Set<Rol> roles;
 	
-	@OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties({"usuario"})
 	private Set<Libro> libros;
 	
 	
-	public Usuario() {}
+	public Usuario() 
+	{
+		
+	}
 
 	public Long getId() {
 		return id;
@@ -109,11 +113,11 @@ public class Usuario implements Serializable {
 	}
 
 	
-	public Collection<Rol> getRoles() {
+	public Set<Rol> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Collection<Rol> roles) {
+	public void setRoles(Set<Rol> roles) {
 		this.roles = roles;
 	}
 

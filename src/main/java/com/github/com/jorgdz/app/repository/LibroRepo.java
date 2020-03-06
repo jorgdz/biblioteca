@@ -7,5 +7,5 @@ import com.github.com.jorgdz.app.entity.Libro;
 
 @Repository
 public interface LibroRepo extends JpaRepository<Libro, Long>{
-
+	
 }

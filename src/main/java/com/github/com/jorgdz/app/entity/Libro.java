@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,12 +33,12 @@ public class Libro implements Serializable {
 	
 	private String sinopsis;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JsonIgnoreProperties({"libros"})
 	private Editorial editorial;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JsonIgnoreProperties({"libros"})
+	@ManyToOne
+	@JsonIgnoreProperties({"libros", "roles"})
 	private Usuario usuario;
 	
 	

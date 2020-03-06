@@ -15,7 +15,7 @@ import com.github.com.jorgdz.app.util.AppHelper;
 @CrossOrigin(AppHelper.CROSS_ORIGIN)
 public class MainController {
 	
-	@GetMapping(value = {"/", "index"}, produces = AppHelper.FORMAT_RESPONSE)
+	@GetMapping(value = {"/", "/index"}, produces = AppHelper.FORMAT_RESPONSE)
 	public ResponseEntity<?> index ()
 	{
 		Map<String, Object> map = new HashMap<>();

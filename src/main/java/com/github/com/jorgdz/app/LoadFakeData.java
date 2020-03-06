@@ -39,6 +39,7 @@ public class LoadFakeData /*implements ApplicationListener<ContextRefreshedEvent
 	private EditorialRepo editorialRepo;
 	
 	//@Override
+	@SuppressWarnings("unchecked")
 	public void onApplicationEvent(ContextRefreshedEvent event) 
 	{
 		Usuario u1 = new Usuario();
@@ -57,7 +58,7 @@ public class LoadFakeData /*implements ApplicationListener<ContextRefreshedEvent
 		Collection<Rol> roles = Arrays.asList(rol1, rol2);
 		rolRepo.saveAll(roles);
 		
-		u1.setRoles(Arrays.asList(rol1));
+		u1.setRoles((Set<Rol>) Arrays.asList(rol1));
 		userRepo.save(u1);
 		
 

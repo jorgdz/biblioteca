@@ -6,7 +6,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,15 +30,21 @@ public class Editorial implements Serializable {
 	private String nombre;
 
 	
-	@OneToMany(mappedBy = "editorial", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JsonIgnoreProperties({"editorial"})
+	@OneToMany(mappedBy = "editorial", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties({"editorial", "usuario"})
 	private Set<Libro> libros;
 	
 
-	public Editorial() {
-		super();
+	public Editorial(Long id, String nombre) {
+		this.id = id;
+		this.nombre = nombre;		
 	}
-
+	
+	public Editorial()
+	{
+		
+	}
+	
 	public Long getId() {
 		return id;
 	}

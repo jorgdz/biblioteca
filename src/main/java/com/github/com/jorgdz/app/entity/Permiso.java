@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,12 +30,12 @@ public class Permiso implements Serializable {
 	
 	private String url;
 	
-	@ManyToMany(mappedBy = "permisos", fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "permisos")
 	@JsonIgnoreProperties({"permisos"})
 	private Collection<Rol> roles;
 
 	public Permiso() {
-		super();
+		
 	}
 	
 	public Long getId() {

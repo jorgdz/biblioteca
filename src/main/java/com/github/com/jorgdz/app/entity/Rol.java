@@ -2,10 +2,10 @@ package com.github.com.jorgdz.app.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,9 +33,9 @@ public class Rol implements Serializable{
 	
 	
 	
-	@ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
-	@JsonIgnoreProperties({"roles"})
-	private Collection<Usuario> usuarios;
+	@ManyToMany(mappedBy = "roles")
+	@JsonIgnoreProperties({"roles", "libros"})
+	private Set<Usuario> usuarios;
 	
 	@ManyToMany
 	@JoinTable(name = "permisos_roles", joinColumns = @JoinColumn(name = "rol_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "permiso_id", referencedColumnName = "id"))
@@ -43,7 +43,16 @@ public class Rol implements Serializable{
 	private Collection<Permiso> permisos;
 	
 	
-	public Rol() {}
+	public Rol(Long id, @NotEmpty String nombre) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+	}
+
+	public Rol() 
+	{
+		
+	}
 
 	public Long getId() {
 		return id;
@@ -61,11 +70,11 @@ public class Rol implements Serializable{
 		this.nombre = nombre;
 	}
 
-	public Collection<Usuario> getUsuarios() {
+	public Set<Usuario> getUsuarios() {
 		return usuarios;
 	}
 
-	public void setUsuarios(Collection<Usuario> usuarios) {
+	public void setUsuarios(Set<Usuario> usuarios) {
 		this.usuarios = usuarios;
 	}
 	

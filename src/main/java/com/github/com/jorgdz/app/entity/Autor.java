@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,7 +27,7 @@ public class Autor implements Serializable {
 	private String apellidos;
 	
 	
-	@ManyToMany(mappedBy = "autores", fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "autores")
 	@JsonIgnoreProperties({"autores"})
 	private Set<Libro> libros;
 	
