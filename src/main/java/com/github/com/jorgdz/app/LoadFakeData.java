@@ -11,11 +11,13 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import com.github.com.jorgdz.app.entity.Autor;
 import com.github.com.jorgdz.app.entity.Editorial;
 import com.github.com.jorgdz.app.entity.Libro;
+import com.github.com.jorgdz.app.entity.Permiso;
 import com.github.com.jorgdz.app.entity.Rol;
 import com.github.com.jorgdz.app.entity.Usuario;
 import com.github.com.jorgdz.app.repository.AutorRepo;
 import com.github.com.jorgdz.app.repository.EditorialRepo;
 import com.github.com.jorgdz.app.repository.LibroRepo;
+import com.github.com.jorgdz.app.repository.PermisoRepo;
 import com.github.com.jorgdz.app.repository.RolRepo;
 import com.github.com.jorgdz.app.repository.UsuarioRepo;
 import com.github.javafaker.Faker;
@@ -38,8 +40,10 @@ public class LoadFakeData /*implements ApplicationListener<ContextRefreshedEvent
 	@Autowired
 	private EditorialRepo editorialRepo;
 	
+	@Autowired 
+	private PermisoRepo permisoRepo;
+	
 	//@Override
-	@SuppressWarnings("unchecked")
 	public void onApplicationEvent(ContextRefreshedEvent event) 
 	{
 		Usuario u1 = new Usuario();
@@ -48,6 +52,7 @@ public class LoadFakeData /*implements ApplicationListener<ContextRefreshedEvent
 		u1.setClave("$2a$10$HlFUDBXs9EkVq8yXiQ5nYeHr.Nc0Ej4ATzdXx9n7kVAmqY5TyxK2q");
 		u1.setCorreo("jdzm@outlook.es");
 		u1.setEnabled(true);
+		
 		
 		Rol rol1 = new Rol();
 		rol1.setNombre("ROLE_ADMIN");
@@ -58,7 +63,13 @@ public class LoadFakeData /*implements ApplicationListener<ContextRefreshedEvent
 		Collection<Rol> roles = Arrays.asList(rol1, rol2);
 		rolRepo.saveAll(roles);
 		
-		u1.setRoles((Set<Rol>) Arrays.asList(rol1));
+		permisoRepo.saveAll(Arrays.asList(new Permiso("GET_ROLES_WITH_USERS_PERMISSIONS", "/roles"), 
+										new Permiso("GET_ROLES_BYID_WITH_USERS_PERMISSIONS", "/roles/:id")));
+		
+		Set<Rol> rolesUser = new HashSet<Rol>();
+		rolesUser.add(rol1);
+		
+		u1.setRoles(rolesUser);
 		userRepo.save(u1);
 		
 

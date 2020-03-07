@@ -22,4 +22,8 @@ public interface RolRepo extends JpaRepository<Rol, Long> {
 	@Query("SELECT r FROM Rol r WHERE r.nombre like %?1%")
 	Page<Rol> findAllByNombre (String nombre, Pageable pageable);
 	
+	Rol findByNombre(String nombre);
+	
+	@Query("SELECT r FROM Rol r WHERE r.nombre = ?1 and r.id <> ?2")
+	Rol findByNombre(String nombre, Long id);
 }

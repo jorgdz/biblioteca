@@ -26,7 +26,7 @@ public class Editorial implements Serializable {
 	private Long id;
 	
 	@NotEmpty
-	@Column(name = "nombre", unique = true)
+	@Column(name = "nombre")
 	private String nombre;
 
 	

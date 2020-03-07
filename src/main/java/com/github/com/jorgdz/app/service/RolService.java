@@ -43,6 +43,19 @@ public class RolService implements IRolService{
 		return rolRepo.findRolById(id).orElse(null);		
 	}
 	
+	@Transactional(readOnly = true)
+	@Override
+	public Rol findByNombre(String nombre) {
+		return rolRepo.findByNombre(nombre);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public Rol findByNombre(String nombre, Long id) {
+		return rolRepo.findByNombre(nombre, id);
+	}
+	
+	@Transactional
 	@Override
 	public Rol save(Rol rol) {
 		return rolRepo.save(rol);

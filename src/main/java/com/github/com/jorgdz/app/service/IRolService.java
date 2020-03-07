@@ -17,6 +17,10 @@ public interface IRolService {
 	
 	Rol findRolById(Long id);
 	
+	Rol findByNombre(String nombre);
+	
+	Rol findByNombre(String nombre, Long id);
+	
 	Rol save(Rol rol);
 	
 	void delete(Long id);

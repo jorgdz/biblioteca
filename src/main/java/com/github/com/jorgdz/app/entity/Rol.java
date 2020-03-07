@@ -30,7 +30,7 @@ public class Rol implements Serializable{
 	private Long id;
 	
 	@NotEmpty
-	@Column(name = "nombre", unique = true)
+	@Column(name = "nombre")
 	private String nombre;
 	
 	
@@ -86,7 +86,22 @@ public class Rol implements Serializable{
 	public void setPermisos(Collection<Permiso> permisos) {
 		this.permisos = permisos;
 	}
-
+	
+	public void addPermiso (Permiso permiso)
+	{
+		this.permisos.add(permiso);
+	}
+	
+	public void clear ()
+	{
+		this.permisos.clear();
+	}
+	
+	public void removePermiso (Permiso permiso)
+	{
+		this.permisos.remove(permiso);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

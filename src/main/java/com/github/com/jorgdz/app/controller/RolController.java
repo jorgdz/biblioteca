@@ -1,4 +1,5 @@
 package com.github.com.jorgdz.app.controller;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -17,15 +18,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.com.jorgdz.app.entity.Permiso;
 import com.github.com.jorgdz.app.entity.Rol;
+import com.github.com.jorgdz.app.service.IPermisoService;
 import com.github.com.jorgdz.app.service.IRolService;
 import com.github.com.jorgdz.app.util.AppHelper;
 import com.github.com.jorgdz.app.util.CustomResponse;
@@ -40,6 +45,9 @@ public class RolController {
 	
 	@Autowired
 	private IRolService serviceRol;
+	
+	@Autowired
+	private IPermisoService servicePermiso;
 	
 	private final Logger log = LoggerFactory.getLogger(getClass());
 	
@@ -132,17 +140,34 @@ public class RolController {
 	@PostMapping(value = "/roles", produces = AppHelper.FORMAT_RESPONSE)
 	public ResponseEntity<?> store (@Valid @RequestBody Rol rol, BindingResult br)
 	{
+		List<String> errors = new ArrayList<String>(); 
+		
 		// GET ERRORS
 		if(br.hasErrors())
 		{
-			List<String> errors = br.getFieldErrors().stream()
+			errors = br.getFieldErrors().stream()
 					.map(error -> "El campo " + error.getField() + " " + error.getDefaultMessage())
 					.collect(Collectors.toList());
 			
 			return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
 		}
 		
+		// VALIDATE UNIQUE ROL
+		Rol rolUnique = serviceRol.findByNombre(rol.getNombre());
+		
+		if(rolUnique != null)
+		{
+			errors.add("El rol '" + rol.getNombre() + "' ya existe.");
+			return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
+		}
+		
+		if(!rol.getPermisos().isEmpty())
+		{
+			rol.setPermisos(rol.getPermisos().stream().distinct().collect(Collectors.toList()));
+		}
+		
 		Rol role = null;
+		
 		try
 		{
 			// CREATE ROL AND ASSIGN PERMISSION
@@ -151,11 +176,146 @@ public class RolController {
 		catch(DataAccessException ex)
 		{
 			log.error(ex.getMessage());
-			String [] err = ex.getCause().getCause().getLocalizedMessage().split("Detail: ");
-			List<String> error = Arrays.asList(err[1]);
-			return new ResponseEntity<>(new ErrorResponse(error), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(new CustomResponse("Error interno del servidor"), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		return new ResponseEntity<>(new PostResponse("Se ha agregado un nuevo rol !!", role), HttpStatus.CREATED);
+	}
+	
+	
+	@RequestMapping(value = "/roles/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH}, produces = AppHelper.FORMAT_RESPONSE)
+	public ResponseEntity<?> update (@Valid @RequestBody Rol rol, BindingResult br, @PathVariable(name = "id", required = true) String idRol)
+	{
+		List<String> errors = new ArrayList<String>(); 
+		// Validate idRol numeric
+		if(!AppHelper.validateLong(idRol))
+		{
+			return new ResponseEntity<>(new CustomResponse("El id del rol debe ser numérico"), HttpStatus.CONFLICT);
+		}
+		
+		// GET ERRORS IN COLUMNS
+		if(br.hasErrors())
+		{
+			errors = br.getFieldErrors().stream()
+					.map(error -> "El campo " + error.getField() + " " + error.getDefaultMessage())
+					.collect(Collectors.toList());
+			
+			return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
+		}
+		
+		Long id = Long.parseLong(idRol);
+		
+		// FIND ROL BY ID FOR UPDATE
+		Rol role = serviceRol.findById(id);
+		
+		if(role == null)
+		{
+			return new ResponseEntity<>(new CustomResponse("No se ha encontrado ningún rol para el ID " + id), HttpStatus.NOT_FOUND);
+		}
+		
+		// VALIDATE UNIQUE ROL
+		Rol rolUnique = serviceRol.findByNombre(rol.getNombre(), id);
+		
+		if(rolUnique != null)
+		{
+			errors.add("El rol '" + rol.getNombre() + "' ya existe.");
+			return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
+		}
+		
+		if(!rol.getPermisos().isEmpty())
+		{
+			rol.setPermisos(rol.getPermisos().stream().distinct().collect(Collectors.toList()));
+		}
+		
+		Rol updateRol = null;
+		
+		try
+		{
+			Long [] permisos_id_req = rol.getPermisos().stream().map(p -> p.getId()).toArray(Long[]::new);;
+			Long [] permisos_id_data = role.getPermisos().stream().map(p -> p.getId()).toArray(Long[]::new);;
+			
+			log.info("Request: " + Arrays.toString(permisos_id_req));
+			log.info("Data: " + Arrays.toString(permisos_id_data));
+			
+			// UPDATE ROL
+			role.setId(id);
+			role.setNombre(rol.getNombre());
+			
+			if(permisos_id_req.length > 0 && permisos_id_req != null)
+			{
+				for (Long permiso : permisos_id_req) 
+				{
+					if(!Arrays.asList(permisos_id_data).contains(permiso))
+					{
+						// AÑADIENDO PERMISOS AL ROL
+						role.setPermisos(rol.getPermisos().stream().map(p -> servicePermiso.findById(p.getId())).collect(Collectors.toList()));
+					}
+				}
+			}
+			
+			
+			//FAIL IN ADD PERMISSION (I NEED FIND BUG)
+			if(!role.getPermisos().isEmpty())
+			{
+				if(permisos_id_req.length == 0 || permisos_id_req == null)
+				{
+					for (Permiso permiso : role.getPermisos()) 
+					{
+						servicePermiso.deletePermisoRolById(id, permiso.getId());
+					}
+					
+					role.clear();
+				}
+				else
+				{
+					for (Permiso permiso : role.getPermisos()) 
+					{
+						if(!Arrays.asList(permisos_id_req).contains(permiso.getId()))
+						{
+							servicePermiso.deletePermisoRolById(id, permiso.getId());
+							role.removePermiso(permiso);
+						}
+					}
+				}
+			}
+					
+			serviceRol.save(role);
+			updateRol = serviceRol.findById(id);
+		}
+		catch(DataAccessException ex)
+		{
+			log.error(ex.getMessage());
+			return new ResponseEntity<>(new CustomResponse("Error interno del servidor."), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch(Exception ex)
+		{
+			log.error(ex.getMessage());
+			return new ResponseEntity<>(new CustomResponse("Excepción del servidor."), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity<>(new PostResponse("Datos de rol modificado !!", updateRol), HttpStatus.OK);
+	}
+	
+	
+	@DeleteMapping(value = "/roles/{id}", produces = AppHelper.FORMAT_RESPONSE)
+	public ResponseEntity<?> destroy (@PathVariable(name = "id", required = true) String idRol)
+	{
+		// Validate idRol numeric
+		if(!AppHelper.validateLong(idRol))
+		{
+			return new ResponseEntity<>(new CustomResponse("El id del rol debe ser numérico"), HttpStatus.CONFLICT);
+		}
+		
+		Long id = Long.parseLong(idRol);
+		
+		Rol rol = serviceRol.findById(id);
+		if(rol == null)
+		{
+			return new ResponseEntity<>(new CustomResponse("No se ha encontrado ningún rol para el ID " + id), HttpStatus.NOT_FOUND);
+		}
+		
+		serviceRol.delete(id);
+		
+		return new ResponseEntity<>(new CustomResponse("Se eliminado el rol " + rol.getNombre() + "!!"), HttpStatus.OK);
 	}
 }
