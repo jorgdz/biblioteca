@@ -3,6 +3,7 @@ package com.github.com.jorgdz.app.entity;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,7 +28,7 @@ public class Autor implements Serializable {
 	private String apellidos;
 	
 	
-	@ManyToMany(mappedBy = "autores")
+	@ManyToMany(mappedBy = "autores", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties({"autores"})
 	private Set<Libro> libros;
 	

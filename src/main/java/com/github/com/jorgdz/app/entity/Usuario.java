@@ -59,10 +59,7 @@ public class Usuario implements Serializable {
 	private Set<Libro> libros;
 	
 	
-	public Usuario() 
-	{
-		
-	}
+	public Usuario() {}
 
 	public Long getId() {
 		return id;

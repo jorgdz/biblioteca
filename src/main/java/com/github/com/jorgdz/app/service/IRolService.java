@@ -9,15 +9,15 @@ import com.github.com.jorgdz.app.entity.Rol;
 
 public interface IRolService {
 	
-	Page<Rol> findAllRoles(Pageable pageable);	
-	
-	Page<Rol> findAll(Pageable pageable);	
-	
-	Rol findByNombre(Optional<String> nombre);
+	Page<Rol> findAll(Optional<String> nombre, Pageable pageable);	
+		
+	Page<Rol> findAllByNombre(Optional<String> nombre, Pageable pageable);	
 	
 	Rol findById(Long id);
 	
-	void save(Rol rol);
+	Rol findRolById(Long id);
+	
+	Rol save(Rol rol);
 	
 	void delete(Long id);
 	

@@ -13,10 +13,13 @@ import com.github.com.jorgdz.app.entity.Rol;
 @Repository
 public interface RolRepo extends JpaRepository<Rol, Long> {
 	
-	@Query(value = "SELECT r FROM Rol r LEFT JOIN FETCH r.permisos p WHERE r.nombre = ?1")
-	Rol findByName(Optional<String> nombre);
+	@Query("SELECT new com.github.com.jorgdz.app.model.Rol(r.id, r.nombre) FROM Rol r WHERE r.nombre like %?1%")
+	Page<Rol> findAllRoles (String nombre, Pageable pageable);
 	
-	@Query("SELECT new Rol(r.id, r.nombre) FROM Rol r")
-	Page<Rol> findAllRoles (Pageable pageable);
-
+	@Query("SELECT new Rol(r.id, r.nombre) FROM Rol r WHERE r.id = ?1")
+	Optional<Rol> findRolById (Long id);
+	
+	@Query("SELECT r FROM Rol r WHERE r.nombre like %?1%")
+	Page<Rol> findAllByNombre (String nombre, Pageable pageable);
+	
 }

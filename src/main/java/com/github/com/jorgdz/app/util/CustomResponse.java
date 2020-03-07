@@ -7,7 +7,7 @@ public class CustomResponse implements Serializable {
 	private static final long serialVersionUID = 6192447355861761112L;
 	
 	private String message;
-
+	
 	public CustomResponse(String message) {
 		this.message = message;
 	}
@@ -19,5 +19,5 @@ public class CustomResponse implements Serializable {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-		
+
 }

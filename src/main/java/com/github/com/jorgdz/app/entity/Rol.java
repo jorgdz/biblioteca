@@ -1,9 +1,11 @@
 package com.github.com.jorgdz.app.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,8 +34,7 @@ public class Rol implements Serializable{
 	private String nombre;
 	
 	
-	
-	@ManyToMany(mappedBy = "roles")
+	@ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties({"roles", "libros"})
 	private Set<Usuario> usuarios;
 	
@@ -51,7 +52,7 @@ public class Rol implements Serializable{
 
 	public Rol() 
 	{
-		
+		this.permisos = new ArrayList<Permiso>();
 	}
 
 	public Long getId() {

@@ -3,6 +3,7 @@ package com.github.com.jorgdz.app.entity;
 import java.io.Serializable;
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,13 +31,11 @@ public class Permiso implements Serializable {
 	
 	private String url;
 	
-	@ManyToMany(mappedBy = "permisos")
+	@ManyToMany(mappedBy = "permisos", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties({"permisos"})
 	private Collection<Rol> roles;
 
-	public Permiso() {
-		
-	}
+	public Permiso() {}
 	
 	public Long getId() {
 		return id;

@@ -30,7 +30,7 @@ public class EditorialController {
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size)
 	{	
 		Page<Editorial> editoriales = serviceEditorial.findAllEditorial(PageRequest.of(page, size, Sort.by("id").descending()));
-		Paginator<Editorial> data = new Paginator<>(editoriales);
+		Paginator<Editorial> data = new Paginator<Editorial>(editoriales);
 		
 		return new ResponseEntity<>(data.paginate(), HttpStatus.OK);
 	}
@@ -40,7 +40,7 @@ public class EditorialController {
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size)
 	{	
 		Page<Editorial> editoriales = serviceEditorial.findAll(PageRequest.of(page, size, Sort.by("id").descending()));
-		Paginator<Editorial> data = new Paginator<>(editoriales);
+		Paginator<Editorial> data = new Paginator<Editorial>(editoriales);
 		
 		return new ResponseEntity<>(data.paginate(), HttpStatus.OK);
 	}
