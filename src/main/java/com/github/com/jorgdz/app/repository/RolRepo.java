@@ -5,7 +5,9 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.github.com.jorgdz.app.entity.Rol;
@@ -26,4 +28,9 @@ public interface RolRepo extends JpaRepository<Rol, Long> {
 	
 	@Query("SELECT r FROM Rol r WHERE r.nombre = ?1 and r.id <> ?2")
 	Rol findByNombre(String nombre, Long id);
+	
+	@Modifying
+	@Query(value = "DELETE FROM roles WHERE id=:id", nativeQuery = true)
+	void deleteRolById (@Param("id") Long id);
+	
 }

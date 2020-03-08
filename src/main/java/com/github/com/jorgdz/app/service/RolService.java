@@ -2,20 +2,33 @@ package com.github.com.jorgdz.app.service;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.com.jorgdz.app.entity.Rol;
+import com.github.com.jorgdz.app.repository.PermisoRepo;
 import com.github.com.jorgdz.app.repository.RolRepo;
+import com.github.com.jorgdz.app.repository.UsuarioRepo;
 
 @Service
 public class RolService implements IRolService{
 
 	@Autowired
 	private RolRepo rolRepo;
+	
+	@Autowired
+	private PermisoRepo permisoRepo;
+	
+	@Autowired
+	private UsuarioRepo usuarioRepo;
+	
+	private final Logger log = LoggerFactory.getLogger(getClass());
 	
 	@Transactional(readOnly = true)
 	@Override
@@ -61,9 +74,19 @@ public class RolService implements IRolService{
 		return rolRepo.save(rol);
 	}
 
+	@Transactional
 	@Override
 	public void delete(Long id) {
-		rolRepo.deleteById(id);
+		try 
+		{
+			permisoRepo.deletePermisoRolById(id);
+			usuarioRepo.deleteUsuarioRolById(id);
+			rolRepo.deleteRolById(id);
+		}
+		catch (DataAccessException e) 
+		{
+			log.error(e.getMessage());
+		}
 	}
 
 }

@@ -231,8 +231,8 @@ public class RolController {
 		
 		try
 		{
-			Long [] permisos_id_req = rol.getPermisos().stream().map(p -> p.getId()).toArray(Long[]::new);;
-			Long [] permisos_id_data = role.getPermisos().stream().map(p -> p.getId()).toArray(Long[]::new);;
+			Long [] permisos_id_req = rol.getPermisos().stream().map(p -> p.getId()).sorted().toArray(Long[]::new);
+			Long [] permisos_id_data = role.getPermisos().stream().map(p -> p.getId()).sorted().toArray(Long[]::new);
 			
 			log.info("Request: " + Arrays.toString(permisos_id_req));
 			log.info("Data: " + Arrays.toString(permisos_id_data));
@@ -254,7 +254,6 @@ public class RolController {
 			}
 			
 			
-			//FAIL IN ADD PERMISSION (I NEED FIND BUG)
 			if(!role.getPermisos().isEmpty())
 			{
 				if(permisos_id_req.length == 0 || permisos_id_req == null)

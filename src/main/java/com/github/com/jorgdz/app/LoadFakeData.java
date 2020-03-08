@@ -64,7 +64,17 @@ public class LoadFakeData /*implements ApplicationListener<ContextRefreshedEvent
 		rolRepo.saveAll(roles);
 		
 		permisoRepo.saveAll(Arrays.asList(new Permiso("GET_ROLES_WITH_USERS_PERMISSIONS", "/roles"), 
-										new Permiso("GET_ROLES_BYID_WITH_USERS_PERMISSIONS", "/roles/:id")));
+										new Permiso("GET_ROLES_BYID_WITH_USERS_PERMISSIONS", "/roles/**"),
+										new Permiso("GET_ROL_SIMPLE", "/rol"),
+										new Permiso("GET_ROL_SIMPLE_BY_ID", "/rol/**"),
+										new Permiso("POST_ROLES", "/roles"),
+										new Permiso("UPDATE_ROLES", "/roles/**"),
+										new Permiso("DELETE_ROLES", "roles/**"),
+										new Permiso("GET_PERMISSIONS", "/permisos"),
+										new Permiso("GET_PERMISSION_BYID", "/permisos/**"),
+										new Permiso("GET_EDITORIALES_WITH_LIBROS", "/editoriales/libros"),
+										new Permiso("GET_EDITORIALES", "/editoriales"),	
+										new Permiso("GET_LIBROS", "/libros")));
 		
 		Set<Rol> rolesUser = new HashSet<Rol>();
 		rolesUser.add(rol1);

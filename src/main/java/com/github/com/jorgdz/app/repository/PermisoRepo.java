@@ -17,6 +17,10 @@ public interface PermisoRepo extends JpaRepository<Permiso, Long>{
 	@Query(value = "DELETE FROM permisos_roles WHERE rol_id=:rol_id and permiso_id=:permiso_id", nativeQuery = true)
 	void deletePermisoRolById (@Param("rol_id") Long rol_id, @Param("permiso_id") Long permiso_id);
 	
+	@Modifying
+	@Query(value = "DELETE FROM permisos_roles WHERE rol_id=:rol_id", nativeQuery = true)
+	void deletePermisoRolById (@Param("rol_id") Long rol_id);
+	
 	@Query("SELECT p FROM Permiso p WHERE p.nombre like %?1%")
 	Page<Permiso> findAllByNombre (String nombre, Pageable pageable);
 }
