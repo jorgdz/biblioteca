@@ -25,7 +25,7 @@ public class LibroController {
 	@Autowired
 	private ILibroService serviceLibro;
 	
-	@GetMapping(value = "/libros", produces = AppHelper.FORMAT_RESPONSE)
+	@GetMapping(value = "/libros", produces = AppHelper.JSON)
 	public ResponseEntity<?> index (@RequestParam(name = "page", required = false, defaultValue = "0") int page,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size)
 	{

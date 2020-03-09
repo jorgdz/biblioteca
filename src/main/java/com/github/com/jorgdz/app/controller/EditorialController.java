@@ -25,7 +25,7 @@ public class EditorialController {
 	@Autowired
 	private IEditorialService serviceEditorial;
 	
-	@GetMapping(value = "/editoriales", produces = AppHelper.FORMAT_RESPONSE)
+	@GetMapping(value = "/editoriales", produces = AppHelper.JSON)
 	public ResponseEntity<?> index (@RequestParam(name = "page", required = false, defaultValue = "0") int page,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size)
 	{	
@@ -35,7 +35,7 @@ public class EditorialController {
 		return new ResponseEntity<>(data.paginate(), HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/editoriales/libros", produces = AppHelper.FORMAT_RESPONSE)
+	@GetMapping(value = "/editorial/libros", produces = AppHelper.JSON)
 	public ResponseEntity<?> getEditoriales (@RequestParam(name = "page", required = false, defaultValue = "0") int page,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size)
 	{	

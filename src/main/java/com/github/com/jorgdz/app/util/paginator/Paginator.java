@@ -17,6 +17,8 @@ public class Paginator <T> {
 	{
 		this.pages = pages;
 	}
+	
+	public Paginator (){}
 		
 	public PageResponse paginate()
 	{

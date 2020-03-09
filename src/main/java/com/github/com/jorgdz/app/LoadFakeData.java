@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.github.com.jorgdz.app.entity.Autor;
 import com.github.com.jorgdz.app.entity.Editorial;
@@ -20,6 +21,7 @@ import com.github.com.jorgdz.app.repository.LibroRepo;
 import com.github.com.jorgdz.app.repository.PermisoRepo;
 import com.github.com.jorgdz.app.repository.RolRepo;
 import com.github.com.jorgdz.app.repository.UsuarioRepo;
+import com.github.com.jorgdz.app.util.AppHelper;
 import com.github.javafaker.Faker;
 
 //@Component
@@ -43,46 +45,77 @@ public class LoadFakeData /*implements ApplicationListener<ContextRefreshedEvent
 	@Autowired 
 	private PermisoRepo permisoRepo;
 	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	 
 	//@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) 
-	{
-		Usuario u1 = new Usuario();
-		u1.setNombres("Jorge Isrrael");
-		u1.setApellidos("Diaz Montoya");
-		u1.setClave("$2a$10$HlFUDBXs9EkVq8yXiQ5nYeHr.Nc0Ej4ATzdXx9n7kVAmqY5TyxK2q");
-		u1.setCorreo("jdzm@outlook.es");
-		u1.setEnabled(true);
+	{	
+		Collection<Permiso> permisos = Arrays.asList(new Permiso("ROLES_WITH_USERS_PERMISSIONS", AppHelper.PREFIX.concat("/roles")), 
+				new Permiso("ROLE_BY_ID_WITH_USERS_PERMISSIONS", AppHelper.PREFIX.concat("/roles/**")),
+				new Permiso("ROL_SIMPLE", AppHelper.PREFIX.concat("/rol")),
+				new Permiso("ROL_SIMPLE_BY_ID", AppHelper.PREFIX.concat("/rol/**")),
+				new Permiso("CREATE_ROLES", AppHelper.PREFIX.concat("/roles")),
+				new Permiso("UPDATE_ROLES", AppHelper.PREFIX.concat("/roles/**")),
+				new Permiso("DELETE_ROLES", AppHelper.PREFIX.concat("roles/**")),
+				new Permiso("PERMISSIONS", AppHelper.PREFIX.concat("/permisos")),
+				new Permiso("PERMISSION_BY_ID", AppHelper.PREFIX.concat("/permisos/**")),
+				new Permiso("EDITORIALES_WITH_LIBROS", AppHelper.PREFIX.concat("/editorial/libros")),
+				new Permiso("EDITORIALES", AppHelper.PREFIX.concat("/editoriales")),	
+				new Permiso("LIBROS", AppHelper.PREFIX.concat("/libros")),
+				new Permiso("USUARIOS", AppHelper.PREFIX.concat("/usuarios")),
+				new Permiso("USUARIOS_BY_ID", AppHelper.PREFIX.concat("/usuarios/**")),
+				new Permiso("CREATE_USUARIOS", AppHelper.PREFIX.concat("/usuarios")));
 		
+		permisoRepo.saveAll(permisos);
 		
 		Rol rol1 = new Rol();
-		rol1.setNombre("ROLE_ADMIN");
+		rol1.setNombre("ADMIN");
+		rol1.setPermisos(permisos);
 		
 		Rol rol2 = new Rol();
-		rol2.setNombre("ROLE_USUARIO");
+		rol2.setNombre("USUARIO");
 		
 		Collection<Rol> roles = Arrays.asList(rol1, rol2);
 		rolRepo.saveAll(roles);
+				
+		Set<Rol> roleUser = new HashSet<Rol>();
+		roleUser.add(rol1);
 		
-		permisoRepo.saveAll(Arrays.asList(new Permiso("GET_ROLES_WITH_USERS_PERMISSIONS", "/roles"), 
-										new Permiso("GET_ROLES_BYID_WITH_USERS_PERMISSIONS", "/roles/**"),
-										new Permiso("GET_ROL_SIMPLE", "/rol"),
-										new Permiso("GET_ROL_SIMPLE_BY_ID", "/rol/**"),
-										new Permiso("POST_ROLES", "/roles"),
-										new Permiso("UPDATE_ROLES", "/roles/**"),
-										new Permiso("DELETE_ROLES", "roles/**"),
-										new Permiso("GET_PERMISSIONS", "/permisos"),
-										new Permiso("GET_PERMISSION_BYID", "/permisos/**"),
-										new Permiso("GET_EDITORIALES_WITH_LIBROS", "/editoriales/libros"),
-										new Permiso("GET_EDITORIALES", "/editoriales"),	
-										new Permiso("GET_LIBROS", "/libros")));
-		
-		Set<Rol> rolesUser = new HashSet<Rol>();
-		rolesUser.add(rol1);
-		
-		u1.setRoles(rolesUser);
+		//$2a$10$HlFUDBXs9EkVq8yXiQ5nYeHr.Nc0Ej4ATzdXx9n7kVAmqY5TyxK2q -> test
+		Usuario u1 = new Usuario();
+		u1.setNombres("Jorge Isrrael");
+		u1.setApellidos("Diaz Montoya");
+		u1.setClave(passwordEncoder.encode("admin"));
+		u1.setCorreo("jdzm@outlook.es");
+		u1.setEnabled(true);
+		u1.setRoles(roleUser);
 		userRepo.save(u1);
 		
-
+		Usuario u2 = new Usuario();
+		u2.setNombres("Josué Aron");
+		u2.setApellidos("Caballero Macías");
+		u2.setClave(passwordEncoder.encode("12345"));
+		u2.setCorreo("elsorbo@gmail.com");
+		u2.setEnabled(true);
+		userRepo.save(u2);
+		
+		Usuario u3 = new Usuario();
+		u3.setNombres("Cesar");
+		u3.setApellidos("Lata");
+		u3.setClave(passwordEncoder.encode("12345"));
+		u3.setCorreo("cess15@gmail.com");
+		u3.setEnabled(true);
+		userRepo.save(u3);
+		
+		Usuario u4 = new Usuario();
+		u4.setNombres("Joel");
+		u4.setApellidos("Velez");
+		u4.setClave(passwordEncoder.encode("12345"));
+		u4.setCorreo("jvlz@live.com");
+		u4.setEnabled(false);
+		userRepo.save(u4);
+		
 		Faker faker = new Faker();
 		
 		for (int i = 0; i < 25; i++) 

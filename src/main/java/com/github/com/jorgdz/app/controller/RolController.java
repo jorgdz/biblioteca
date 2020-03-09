@@ -52,7 +52,7 @@ public class RolController {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 	
 	// GET ROLES WITH USERS AND PERMISSIONS
-	@GetMapping(value = "/roles", produces = AppHelper.FORMAT_RESPONSE)
+	@GetMapping(value = "/roles", produces = AppHelper.JSON)
 	public ResponseEntity<?> index (@RequestParam(name = "page", required = false, defaultValue = "0") int page,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "name", required = false) Optional<String> nombre)
@@ -64,7 +64,7 @@ public class RolController {
 	}
 		
 	// GET BY ID ROLES WITH USERS AND PERMISSIONS
-	@GetMapping(value = "/roles/{id}", produces = AppHelper.FORMAT_RESPONSE)
+	@GetMapping(value = "/roles/{id}", produces = AppHelper.JSON)
 	public ResponseEntity<?> show (@PathVariable(name = "id") String idRol)
 	{
 		if(!AppHelper.validateLong(idRol))
@@ -90,19 +90,19 @@ public class RolController {
 	}
 	
 	// GET ROLES
-	@GetMapping(value = "/rol", produces = AppHelper.FORMAT_RESPONSE)
+	@GetMapping(value = "/rol", produces = AppHelper.JSON)
 	public ResponseEntity<?> getRoles (@RequestParam(name = "page", required = false, defaultValue = "0") int page,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "name", required = false) Optional<String> nombre)
 	{
-		Page<Rol> roles = serviceRol.findAll(nombre, PageRequest.of(page, size, Sort.by("id").descending()));
-		Paginator<Rol> data = new Paginator<Rol>(roles);
+		Page<com.github.com.jorgdz.app.model.Rol> roles = serviceRol.findAll(nombre, PageRequest.of(page, size, Sort.by("id").descending()));
+		Paginator<com.github.com.jorgdz.app.model.Rol> data = new Paginator<com.github.com.jorgdz.app.model.Rol>(roles);
 		
 		return new ResponseEntity<>(data.paginate(), HttpStatus.OK);
 	}
 	
 	// GET ROLES BY ID
-	@GetMapping(value = "/rol/{id}", produces = AppHelper.FORMAT_RESPONSE)
+	@GetMapping(value = "/rol/{id}", produces = AppHelper.JSON)
 	public ResponseEntity<?> getRolById (@PathVariable(name = "id") String idRol)
 	{
 		if(!AppHelper.validateLong(idRol))
@@ -137,7 +137,7 @@ public class RolController {
 	}
 	
 	
-	@PostMapping(value = "/roles", produces = AppHelper.FORMAT_RESPONSE)
+	@PostMapping(value = "/roles", produces = AppHelper.JSON)
 	public ResponseEntity<?> store (@Valid @RequestBody Rol rol, BindingResult br)
 	{
 		List<String> errors = new ArrayList<String>(); 
@@ -183,7 +183,7 @@ public class RolController {
 	}
 	
 	
-	@RequestMapping(value = "/roles/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH}, produces = AppHelper.FORMAT_RESPONSE)
+	@RequestMapping(value = "/roles/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH}, produces = AppHelper.JSON)
 	public ResponseEntity<?> update (@Valid @RequestBody Rol rol, BindingResult br, @PathVariable(name = "id", required = true) String idRol)
 	{
 		List<String> errors = new ArrayList<String>(); 
@@ -253,9 +253,10 @@ public class RolController {
 				}
 			}
 			
-			
+			// VERIFICO QUE LOS ROLES QUE ESTÁN EN LA DATA, TENGAN PERMISOS
 			if(!role.getPermisos().isEmpty())
 			{
+				//COMPRUEBO QUE NO ENVIO PERMISOS EN EL REQUEST PARA EL ROL SELECCIONADO
 				if(permisos_id_req.length == 0 || permisos_id_req == null)
 				{
 					for (Permiso permiso : role.getPermisos()) 
@@ -296,7 +297,7 @@ public class RolController {
 	}
 	
 	
-	@DeleteMapping(value = "/roles/{id}", produces = AppHelper.FORMAT_RESPONSE)
+	@DeleteMapping(value = "/roles/{id}", produces = AppHelper.JSON)
 	public ResponseEntity<?> destroy (@PathVariable(name = "id", required = true) String idRol)
 	{
 		// Validate idRol numeric

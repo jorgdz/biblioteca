@@ -35,7 +35,7 @@ public class PermisoController {
 	
 	
 	 // GET PERMISSIONS WITH ALL
-	@GetMapping(value = "/permisos", produces = AppHelper.FORMAT_RESPONSE)
+	@GetMapping(value = "/permisos", produces = AppHelper.JSON)
 	public ResponseEntity<?> index (@RequestParam(name = "page", required = false, defaultValue = "0") int page,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "name", required = false) Optional<String> nombre)
@@ -52,7 +52,7 @@ public class PermisoController {
 	}
 	
 	// GET PERMISSION BY ID WITH ALL
-	@GetMapping(value = "/permisos/{id}", produces = AppHelper.FORMAT_RESPONSE)
+	@GetMapping(value = "/permisos/{id}", produces = AppHelper.JSON)
 	public ResponseEntity<?> show (@PathVariable(name = "id") String idPermiso)
 	{
 		if(!AppHelper.validateLong(idPermiso))

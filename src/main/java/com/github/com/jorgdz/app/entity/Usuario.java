@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 public class Usuario implements Serializable {
 
 	private static final long serialVersionUID = 4701136986054935997L;
-	
+		 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -39,7 +39,7 @@ public class Usuario implements Serializable {
 	
 	@NotEmpty
 	@Email
-	@Column(name = "correo", unique = true)
+	@Column(name = "correo")
 	private String correo;
 	
 	@NotEmpty
@@ -54,6 +54,7 @@ public class Usuario implements Serializable {
 	@JsonIgnoreProperties({"usuarios"})
 	private Set<Rol> roles;
 	
+	@JsonProperty(access = Access.READ_ONLY)
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties({"usuario"})
 	private Set<Libro> libros;

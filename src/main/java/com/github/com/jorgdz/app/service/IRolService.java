@@ -9,7 +9,7 @@ import com.github.com.jorgdz.app.entity.Rol;
 
 public interface IRolService {
 	
-	Page<Rol> findAll(Optional<String> nombre, Pageable pageable);	
+	Page<com.github.com.jorgdz.app.model.Rol> findAll(Optional<String> nombre, Pageable pageable);	
 		
 	Page<Rol> findAllByNombre(Optional<String> nombre, Pageable pageable);	
 	

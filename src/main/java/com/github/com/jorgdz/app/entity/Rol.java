@@ -68,7 +68,7 @@ public class Rol implements Serializable{
 	}
 
 	public void setNombre(String nombre) {
-		this.nombre = nombre;
+		this.nombre = this.formatNombre(nombre);
 	}
 
 	public Set<Usuario> getUsuarios() {
@@ -127,9 +127,25 @@ public class Rol implements Serializable{
 		return true;
 	}
 
+	public String formatNombre (String nombre)
+	{
+		String result = "";
+		if(nombre.startsWith("ROLE_"))
+		{
+			result = nombre;
+		}
+		else
+		{
+			result = "ROLE_" + nombre;
+		}
+		
+		return result.toUpperCase();
+	}
+	
+	
 	@Override
 	public String toString() {
-		return "Rol [id=" + id + ", nombre=" + nombre + ", usuarios=" + usuarios + "]";
+		return "Rol [id=" + id + ", nombre=" + nombre + "]";
 	}
 	
 }

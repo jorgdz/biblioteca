@@ -32,7 +32,7 @@ public class RolService implements IRolService{
 	
 	@Transactional(readOnly = true)
 	@Override
-	public Page<Rol> findAll(Optional<String> nombre, Pageable pageable) 
+	public Page<com.github.com.jorgdz.app.model.Rol> findAll(Optional<String> nombre, Pageable pageable) 
 	{
 		return rolRepo.findAllRoles(nombre.orElse("_").toUpperCase(), pageable);
 	}
