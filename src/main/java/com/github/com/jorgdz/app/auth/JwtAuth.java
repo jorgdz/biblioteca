@@ -40,11 +40,10 @@ public class JwtAuth extends UsernamePasswordAuthenticationFilter {
 		this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(AppHelper.PREFIX.concat("/login"), "POST"));
 	}
 
-
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-			throws AuthenticationException {
-		
+			throws AuthenticationException {	
+				
 		String correo = request.getParameter("correo");
 		String clave = request.getParameter("clave");
 				

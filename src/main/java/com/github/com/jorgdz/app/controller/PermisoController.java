@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ import com.github.com.jorgdz.app.util.CustomResponse;
 import com.github.com.jorgdz.app.util.paginator.Paginator;
 
 @RestController
-@CrossOrigin(AppHelper.CROSS_ORIGIN)
+@CrossOrigin(origins = AppHelper.CROSS_ORIGIN, methods = {RequestMethod.GET})
 @RequestMapping(AppHelper.PREFIX)
 public class PermisoController {
 	

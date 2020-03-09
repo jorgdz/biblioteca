@@ -1,7 +1,6 @@
 package com.github.com.jorgdz.app.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +38,7 @@ import com.github.com.jorgdz.app.util.PostResponse;
 import com.github.com.jorgdz.app.util.paginator.Paginator;
 
 @RestController
-@CrossOrigin(AppHelper.CROSS_ORIGIN)
+@CrossOrigin(origins = AppHelper.CROSS_ORIGIN, methods = {RequestMethod.GET, RequestMethod.POST})
 @RequestMapping(AppHelper.PREFIX)
 public class UsuarioController {
 
@@ -54,11 +53,18 @@ public class UsuarioController {
 	// GET USERS
 	@GetMapping(value = "/usuarios", produces = AppHelper.JSON)
 	public ResponseEntity<?> index (@RequestParam(name = "page", required = false, defaultValue = "0") int page, @RequestParam(name = "size", required = false, defaultValue = "10") int size,			
-			@RequestParam(name = "nombres", required = false) Optional<String> nombre,
-			@RequestParam(name = "apellidos", required = false) Optional<String> apellido,
-			@RequestParam(name = "correo", required = false) Optional<String> correo,
-			@RequestParam(name = "enabled", required = false, defaultValue = "1") Optional<String> enabled)
+			@RequestParam(name = "correo", required = false) Optional<String> correo)
 	{
+		if(correo.isPresent() && correo != null)
+		{
+			Usuario usuario = serviceUsuario.findByCorreo(correo.orElse(null));
+			if(usuario == null)
+			{
+				return new ResponseEntity<>(new CustomResponse("El usuario con el correo "+correo.get()+" no existe"), HttpStatus.OK);
+			}
+			
+			return new ResponseEntity<>(usuario, HttpStatus.OK);
+		}
 		
 		Pageable pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
 						

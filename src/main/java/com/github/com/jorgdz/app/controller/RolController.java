@@ -39,7 +39,7 @@ import com.github.com.jorgdz.app.util.PostResponse;
 import com.github.com.jorgdz.app.util.paginator.Paginator;
 
 @RestController
-@CrossOrigin(AppHelper.CROSS_ORIGIN)
+@CrossOrigin(origins = AppHelper.CROSS_ORIGIN, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PATCH, RequestMethod.PUT, RequestMethod.DELETE})
 @RequestMapping(AppHelper.PREFIX)
 public class RolController {
 	

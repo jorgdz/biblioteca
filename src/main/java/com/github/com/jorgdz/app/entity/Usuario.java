@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -54,7 +55,7 @@ public class Usuario implements Serializable {
 	@JsonIgnoreProperties({"usuarios"})
 	private Set<Rol> roles;
 	
-	@JsonProperty(access = Access.READ_ONLY)
+	@JsonIgnore
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties({"usuario"})
 	private Set<Libro> libros;
