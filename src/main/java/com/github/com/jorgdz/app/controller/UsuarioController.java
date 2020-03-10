@@ -18,13 +18,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,10 +45,7 @@ import com.github.com.jorgdz.app.util.paginator.Paginator;
 public class UsuarioController {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
-	
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
-	
+		
 	@Autowired
 	private IUsuarioService serviceUsuario;
 	
@@ -144,12 +139,12 @@ public class UsuarioController {
 	
 	
 	//UPDATE USER
-	@PutMapping(value = "/usuarios/{id}", produces = AppHelper.JSON)
+	@RequestMapping(value = "/usuarios/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH}, produces = AppHelper.JSON)
 	public ResponseEntity<?> update (@Valid @RequestBody Usuario usuario, BindingResult br, @PathVariable(name = "id", required = true) String idUsuario)
 	{
 		List<String> errors = new ArrayList<String>(); 
 		
-		// Validate idRol numeric
+		// Validate idUsuario numeric
 		if(!AppHelper.validateLong(idUsuario))
 		{
 			return new ResponseEntity<>(new CustomResponse("El id del usuario debe ser numérico"), HttpStatus.CONFLICT);
@@ -186,14 +181,16 @@ public class UsuarioController {
 		
 		if(!usuario.getRoles().isEmpty())
 		{
-			usuario.setRoles(usuario.getRoles().stream().distinct().collect(Collectors.toList()));  // VERIFICANDO QUE LOS ROLES NO SE REPITAN EN EL REQUEST
-			log.info(Arrays.asList(usuario.getRoles()).toString());
+			usuario.getRoles().forEach(role -> {
+				System.out.println(role);
+ 		 	});
+			//usuario.setRoles(usuario.getRoles().stream().distinct().collect(Collectors.toList()));  // VERIFICANDO QUE LOS ROLES NO SE REPITAN EN EL REQUEST
 		}
 		
 		Usuario updateUsuario = null;
 		try 
 		{
-			Long [] roles_req_id = usuario.getRoles().stream().map(r -> r.getId()).sorted().toArray(Long[]::new);
+			Long [] roles_req_id = usuario.getRoles().stream().map(r -> r.getId()).sorted().distinct().toArray(Long[]::new);
 			Long [] roles_data_id = user.getRoles().stream().map(r -> r.getId()).sorted().toArray(Long[]::new);
 			
 			log.info("Roles request: " + Arrays.toString(roles_req_id));
@@ -205,7 +202,7 @@ public class UsuarioController {
 			user.setApellidos(usuario.getApellidos());
 			user.setCorreo(usuario.getCorreo());
 			user.setEnabled(usuario.isEnabled());
-			user.setClave(passwordEncoder.encode(usuario.getClave()));
+			user.setClave(usuario.getClave());
 			
 			if(roles_req_id.length > 0 && roles_req_id != null) {
 				for (Long rolId : roles_req_id) 
@@ -226,12 +223,13 @@ public class UsuarioController {
 					for (Rol rol : user.getRoles()) {
 						serviceRol.deleteRolUsuarioById(id, rol.getId());
 					}
-					
 					user.clear();
 				}
 				else
 				{
-					for (Rol rol : user.getRoles()) {
+					// BUG ENCONTRADO SI MANDO 1 ROL EN REQUEST Y EN DATA TENGO 3 ROLES ASIGNADOS ME MANDA UN ERROR
+					for (Rol rol : user.getRoles()) 
+					{
 						if(!Arrays.asList(roles_req_id).contains(rol.getId()))
 						{
 							serviceRol.deleteRolUsuarioById(id, rol.getId());
@@ -251,7 +249,7 @@ public class UsuarioController {
 		}
 		catch(Exception ex)
 		{
-			log.error(ex.getMessage());
+			log.error(ex.getLocalizedMessage());
 			return new ResponseEntity<>(new CustomResponse("Excepción del servidor."), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		

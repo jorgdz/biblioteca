@@ -53,9 +53,10 @@ public class UsuarioService implements IUsuarioService {
 	@Transactional(readOnly = true)
 	@Override
 	public Usuario findByCorreo(String correo, Long id) {
-		return null;
+		return repoUsuario.findByCorreo(correo, id);
 	}
 	
+	@Transactional
 	@Override
 	public Usuario save(Usuario usuario) 
 	{

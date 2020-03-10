@@ -36,7 +36,7 @@ public interface RolRepo extends JpaRepository<Rol, Long> {
 	
 	
 	@Modifying
-	@Query(value = "DELETE FROM roles_usuarios WHERE usuario_id=:usuario_id and rol_id=:rol_id", nativeQuery = true)
+	@Query(value = "DELETE FROM roles_usuarios WHERE usuario_id=:usuario_id AND rol_id=:rol_id", nativeQuery = true)
 	void deleteRolUsuarioById (@Param("usuario_id") Long usuario_id, @Param("rol_id") Long rol_id);
 	
 }

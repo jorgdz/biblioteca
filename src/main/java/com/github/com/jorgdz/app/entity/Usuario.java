@@ -53,7 +53,7 @@ public class Usuario implements Serializable {
 	
 	@ManyToMany
 	@JoinTable(name = "roles_usuarios", joinColumns = @JoinColumn(name="usuario_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name="rol_id", referencedColumnName = "id"))
-	@JsonIgnoreProperties({"usuarios"})
+	@JsonIgnoreProperties({"usuarios", "permisos"})
 	private Collection<Rol> roles;
 	
 	@JsonIgnore
