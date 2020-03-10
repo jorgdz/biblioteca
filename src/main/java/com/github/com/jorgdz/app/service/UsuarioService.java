@@ -21,73 +21,20 @@ public class UsuarioService implements IUsuarioService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
-	@Transactional(readOnly = true)
-	@Override
-	public Page<Usuario> findAllByNombre(Optional<String> nombre, Pageable pageable)
-	{
-		return repoUsuario.findAllByNombre(nombre.orElse("_"), pageable);
-	}
 	
 	@Transactional(readOnly = true)
 	@Override
-	public Page<Usuario> findAll(Pageable pageable)
+	public Page<Usuario> findAll(Optional<String> nombres, Optional<String> apellidos, Optional<String> correo, Optional<Boolean> enabled, Pageable pageable)
 	{
-		/*if(nombre.isPresent())
+		if(!nombres.isPresent() && !apellidos.isPresent() && !correo.isPresent() && !enabled.isPresent())
 		{
-			// GET USERS FOR NAME
-			return repoUsuario.findAllByNombre(nombre.orElse("_").toLowerCase(), pageable);
-		}
-		else if(apellido.isPresent())
-		{
-			// GET USERS FOR LASTNAME
-			return repoUsuario.findAllByApellido(apellido.orElse("_").toLowerCase(), pageable);
-		}
-		else if(correo.isPresent())
-		{
-			// GET USERS FOR EMAIL
-			return repoUsuario.findAllByCorreo(correo.orElse("_").toLowerCase(), pageable);
-		}
-		else if(enabled.isPresent())
-		{
-			// GET USERS FOR ENABLED (TRUE, FALSE)
-			boolean active = true;
-			
-			if(enabled.get().equals("0"))
-			{
-				active = false;
-			}
-			else 
-			{
-				active = true;
-			}		
-			return repoUsuario.findAllByEnabled(active, pageable);
-		}
-		else if (nombre.isPresent() && apellido.isPresent())
-		{
-			return repoUsuario.findAllByNombreAndApellido(nombre.orElse("_").toLowerCase(), apellido.orElse("_").toLowerCase(), pageable);
-		}
-		else if(nombre.isPresent() && apellido.isPresent() && correo.isPresent())
-		{
-			return repoUsuario.findAllByNombreAndApellidoAndCorreo(nombre.orElse("_").toLowerCase(), apellido.orElse("_").toLowerCase(), correo.orElse("_").toLowerCase(), pageable);
-		}
-		else if(nombre.isPresent() && apellido.isPresent() && correo.isPresent() && enabled.isPresent())
-		{
-			boolean active = true;
-			
-			if(enabled.get().equals("0"))
-			{
-				active = false;
-			}
-			else 
-			{
-				active = true;
-			}	
-			return repoUsuario.findAllByNombreAndApellidoAndCorreoAndEnabled(nombre.orElse("_").toLowerCase(), apellido.orElse("_").toLowerCase(), correo.orElse("_").toLowerCase(), active, pageable);
-		}
-		else*/
-		//{
 			return repoUsuario.findAll(pageable);
-		//}
+		}
+		else
+		{
+			//select * from usuarios where lower(nombres) like lower('%null%') or lower(apellidos) like ('%diaz%') or lower(correo) like lower('%null%') or enabled = 'false';
+			return repoUsuario.findAllByNombreAndApellidoAndCorreoAndEnabled(nombres.orElse("null").toLowerCase(), apellidos.orElse("null").toLowerCase(), correo.orElse("null").toLowerCase(), enabled.orElse(null), pageable);
+		}	
 	}
 	
 	@Transactional(readOnly = true)
@@ -102,7 +49,13 @@ public class UsuarioService implements IUsuarioService {
 	{
 		return repoUsuario.findByCorreo(correo);
 	}
-
+	
+	@Transactional(readOnly = true)
+	@Override
+	public Usuario findByCorreo(String correo, Long id) {
+		return null;
+	}
+	
 	@Override
 	public Usuario save(Usuario usuario) 
 	{

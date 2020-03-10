@@ -21,7 +21,7 @@ public class EditorialService implements IEditorialService{
 	}
 
 	@Override
-	public Page<Editorial> findAllEditorial(Pageable pageable) {
+	public Page<com.github.com.jorgdz.app.model.Editorial> findAllEditorial(Pageable pageable) {
 		return repoEditorial.findAllEditorial(pageable);
 	}
 	

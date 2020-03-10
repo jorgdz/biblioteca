@@ -9,5 +9,5 @@ public interface IEditorialService {
 	
 	Page<Editorial> findAll(Pageable pageable);
 	
-	Page<Editorial> findAllEditorial(Pageable pageable);
+	Page<com.github.com.jorgdz.app.model.Editorial> findAllEditorial(Pageable pageable);
 }

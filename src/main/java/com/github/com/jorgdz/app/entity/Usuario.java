@@ -1,6 +1,7 @@
 package com.github.com.jorgdz.app.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -53,7 +54,7 @@ public class Usuario implements Serializable {
 	@ManyToMany
 	@JoinTable(name = "roles_usuarios", joinColumns = @JoinColumn(name="usuario_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name="rol_id", referencedColumnName = "id"))
 	@JsonIgnoreProperties({"usuarios"})
-	private Set<Rol> roles;
+	private Collection<Rol> roles;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
@@ -112,11 +113,11 @@ public class Usuario implements Serializable {
 	}
 
 	
-	public Set<Rol> getRoles() {
+	public Collection<Rol> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Set<Rol> roles) {
+	public void setRoles(Collection<Rol> roles) {
 		this.roles = roles;
 	}
 
@@ -127,7 +128,17 @@ public class Usuario implements Serializable {
 	public void setLibros(Set<Libro> libros) {
 		this.libros = libros;
 	}
-
+	
+	public void clear()
+	{
+		this.roles.clear();
+	}
+	
+	public void removeRol (Rol rol)
+	{
+		this.roles.remove(rol);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

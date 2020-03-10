@@ -11,11 +11,11 @@ public interface IUsuarioService {
 	
 	Usuario findById(Long id);
 	
-	Page<Usuario> findAllByNombre(Optional<String> nombre, Pageable pageable);
-	
-	Page<Usuario> findAll(Pageable pageable);
+	Page<Usuario> findAll(Optional<String> nombres, Optional<String> apellidos, Optional<String> correo, Optional<Boolean> enabled, Pageable pageable);
 	
 	Usuario findByCorreo(String correo);
+	
+	Usuario findByCorreo(String correo, Long id);
 	
 	Usuario save(Usuario usuario);
 }

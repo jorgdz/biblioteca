@@ -13,31 +13,14 @@ import com.github.com.jorgdz.app.entity.Usuario;
 @Repository
 public interface UsuarioRepo extends JpaRepository<Usuario, Long>{
 	
-	@Query("SELECT u FROM Usuario u WHERE LOWER(u.nombres) like %?1%")
-	Page<Usuario> findAllByNombre (String nombre, Pageable pageable);
-	
-	@Query("SELECT u FROM Usuario u WHERE LOWER(u.apellidos) like %?1%")
-	Page<Usuario> findAllByApellido (String apellidos, Pageable pageable);
-	
-	@Query("SELECT u FROM Usuario u WHERE LOWER(u.correo) like %?1%")
-	Page<Usuario> findAllByCorreo (String correo, Pageable pageable);
-	
-	@Query("SELECT u FROM Usuario u WHERE u.enabled = ?1")
-	Page<Usuario> findAllByEnabled (boolean enabled, Pageable pageable);
-	
-	@Query("SELECT u FROM Usuario u WHERE LOWER(u.nombres) = ?1 AND LOWER(u.apellidos) = ?2")
-	Page<Usuario> findAllByNombreAndApellido (String nombre, String apellido, Pageable pageable);
-	
-	@Query("SELECT u FROM Usuario u WHERE LOWER(u.nombres) like %?1% AND LOWER(u.apellidos) like %?2% AND LOWER(u.correo) like %?3%")
-	Page<Usuario> findAllByNombreAndApellidoAndCorreo (String nombre, String apellido, String correo, Pageable pageable);
-	
-	@Query("SELECT u FROM Usuario u WHERE LOWER(u.nombres) like %?1% AND LOWER(u.apellidos) like %?2% AND LOWER(u.correo) like %?3% AND u.enabled = ?4")
-	Page<Usuario> findAllByNombreAndApellidoAndCorreoAndEnabled (String nombre, String apellido, String correo, boolean enabled, Pageable pageable);
-	
-	
+	@Query("SELECT u FROM Usuario u WHERE LOWER(u.nombres) like %?1% OR LOWER(u.apellidos) like %?2% OR LOWER(u.correo) like %?3% OR u.enabled = ?4")
+	Page<Usuario> findAllByNombreAndApellidoAndCorreoAndEnabled (String nombre, String apellido, String correo, Boolean enabled, Pageable pageable);
 	
 	
 	Usuario findByCorreo(String correo);
+	
+	@Query("SELECT u FROM Usuario u WHERE u.correo = ?1 and u.id <> ?2")
+	Usuario findByCorreo(String correo, Long id);
 	
 	@Modifying
 	@Query(value = "DELETE FROM roles_usuarios WHERE rol_id=:rol_id", nativeQuery = true)

@@ -30,8 +30,8 @@ public class EditorialController {
 	public ResponseEntity<?> index (@RequestParam(name = "page", required = false, defaultValue = "0") int page,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size)
 	{	
-		Page<Editorial> editoriales = serviceEditorial.findAllEditorial(PageRequest.of(page, size, Sort.by("id").descending()));
-		Paginator<Editorial> data = new Paginator<Editorial>(editoriales);
+		Page<com.github.com.jorgdz.app.model.Editorial> editoriales = serviceEditorial.findAllEditorial(PageRequest.of(page, size, Sort.by("id").descending()));
+		Paginator<com.github.com.jorgdz.app.model.Editorial> data = new Paginator<com.github.com.jorgdz.app.model.Editorial>(editoriales);
 		
 		return new ResponseEntity<>(data.paginate(), HttpStatus.OK);
 	}

@@ -3,7 +3,6 @@ package com.github.com.jorgdz.app.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -46,12 +45,12 @@ public class UserDetailService implements UserDetailsService{
 		return new User(usuario.getCorreo(), usuario.getClave(), usuario.isEnabled(), true, true, true, getAuthorities(usuario.getRoles()));
 	}
 
-	private Collection<? extends GrantedAuthority> getAuthorities(Set<Rol> roles)
+	private Collection<? extends GrantedAuthority> getAuthorities(Collection<Rol> roles)
 	{
 		return getGrantedAuthorities(getPermisos(roles));
 	}
 	
-	private List<Permiso> getPermisos(Set<Rol> roles) 
+	private List<Permiso> getPermisos(Collection<Rol> roles) 
 	{
         List<Permiso> permisos = new ArrayList<Permiso>();
         

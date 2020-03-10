@@ -65,7 +65,8 @@ public class LoadFakeData /*implements ApplicationListener<ContextRefreshedEvent
 				new Permiso("LIBROS", AppHelper.PREFIX.concat("/libros")),
 				new Permiso("USUARIOS", AppHelper.PREFIX.concat("/usuarios")),
 				new Permiso("USUARIOS_BY_ID", AppHelper.PREFIX.concat("/usuarios/**")),
-				new Permiso("CREATE_USUARIOS", AppHelper.PREFIX.concat("/usuarios")));
+				new Permiso("CREATE_USUARIOS", AppHelper.PREFIX.concat("/usuarios")),
+				new Permiso("UPDATE_USUARIOS", AppHelper.PREFIX.concat("/usuarios/**")));
 		
 		permisoRepo.saveAll(permisos);
 		

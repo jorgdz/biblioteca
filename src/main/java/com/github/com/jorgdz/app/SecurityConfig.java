@@ -58,6 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.GET, AppHelper.PREFIX.concat("/usuarios")).hasAuthority("USUARIOS")
 			.antMatchers(HttpMethod.GET, AppHelper.PREFIX.concat("/usuarios/**")).hasAuthority("USUARIOS_BY_ID")
 			.antMatchers(HttpMethod.POST, AppHelper.PREFIX.concat("/usuarios")).hasAuthority("CREATE_USUARIOS")
+			.antMatchers(HttpMethod.PUT, AppHelper.PREFIX.concat("/usuarios/**")).hasAuthority("UPDATE_USUARIOS")
+			.antMatchers(HttpMethod.GET, AppHelper.PREFIX.concat("/auth")).authenticated()
 			.anyRequest().authenticated()
 			.and()
 			.addFilter(new JwtAuth(this.authenticationManager())) 
@@ -78,12 +80,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception
+	{
 		auth.userDetailsService(serviceUserDetail).passwordEncoder(passwordEncoder);
 	}
 	
 	@Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() 
+	{
         final CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("*"));

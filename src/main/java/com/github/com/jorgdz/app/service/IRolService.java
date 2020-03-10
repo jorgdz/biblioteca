@@ -25,4 +25,6 @@ public interface IRolService {
 	
 	void delete(Long id);
 	
+	
+	void deleteRolUsuarioById(Long usuario_id, Long rol_id);
 }

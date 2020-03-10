@@ -14,6 +14,6 @@ public interface EditorialRepo extends JpaRepository<Editorial, Long>{
 	//Editorial findByNombre(String nombre);
 	
 	@Query("SELECT new com.github.com.jorgdz.app.model.Editorial(e.id, e.nombre) FROM Editorial e")
-	Page<Editorial> findAllEditorial (Pageable pageable);
+	Page<com.github.com.jorgdz.app.model.Editorial> findAllEditorial (Pageable pageable);
 	
 }
