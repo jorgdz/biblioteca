@@ -10,10 +10,13 @@ import com.github.com.jorgdz.app.entity.Editorial;
 
 @Repository
 public interface EditorialRepo extends JpaRepository<Editorial, Long>{
-	
-	//Editorial findByNombre(String nombre);
-	
+		
 	@Query("SELECT new com.github.com.jorgdz.app.model.Editorial(e.id, e.nombre) FROM Editorial e")
 	Page<com.github.com.jorgdz.app.model.Editorial> findAllEditorial (Pageable pageable);
 	
+	Editorial findByNombre(String nombre);
+	
+	@Query("SELECT e FROM Editorial e WHERE e.nombre = ?1 AND e.id <> ?2")
+	Editorial findByNombre(String nombre, Long id);
+
 }

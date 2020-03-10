@@ -39,7 +39,7 @@ import com.github.com.jorgdz.app.util.PostResponse;
 import com.github.com.jorgdz.app.util.paginator.Paginator;
 
 @RestController
-@CrossOrigin(origins = AppHelper.CROSS_ORIGIN, methods = {RequestMethod.GET, RequestMethod.POST})
+@CrossOrigin(origins = AppHelper.CROSS_ORIGIN, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PATCH, RequestMethod.PUT})
 @RequestMapping(AppHelper.PREFIX)
 public class UsuarioController {
 
@@ -115,7 +115,7 @@ public class UsuarioController {
 		if(emailUnique != null)
 		{
 			errors.add("El correo '" + usuario.getCorreo() + "' ya está en uso.");
-			return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.CONFLICT);
 		}
 				
 		if(!usuario.getRoles().isEmpty())

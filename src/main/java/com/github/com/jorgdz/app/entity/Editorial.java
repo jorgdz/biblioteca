@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "editoriales")
@@ -30,6 +32,7 @@ public class Editorial implements Serializable {
 	private String nombre;
 
 	
+	@JsonProperty(access = Access.READ_ONLY)
 	@OneToMany(mappedBy = "editorial", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties({"editorial", "usuario"})
 	private Set<Libro> libros;

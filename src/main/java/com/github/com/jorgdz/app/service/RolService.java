@@ -89,11 +89,4 @@ public class RolService implements IRolService{
 		}
 	}
 
-	@Transactional
-	@Override
-	public void deleteRolUsuarioById(Long usuario_id, Long rol_id) 
-	{
-		this.rolRepo.deleteRolUsuarioById(usuario_id, rol_id);
-	}
-
 }

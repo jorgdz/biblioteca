@@ -9,5 +9,15 @@ public interface IEditorialService {
 	
 	Page<Editorial> findAll(Pageable pageable);
 	
+	Editorial findById(Long id);
+	
+	Editorial findByNombre(String nombre);
+	
+	Editorial findByNombre(String nombre, Long id);
+	
 	Page<com.github.com.jorgdz.app.model.Editorial> findAllEditorial(Pageable pageable);
+	
+	Editorial save (Editorial editorial);
+	
+	void deleteById(Long id);
 }

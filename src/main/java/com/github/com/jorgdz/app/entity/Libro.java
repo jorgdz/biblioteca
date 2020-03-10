@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "libros")
@@ -37,6 +39,8 @@ public class Libro implements Serializable {
 	@JsonIgnoreProperties({"libros"})
 	private Editorial editorial;
 	
+	
+	@JsonProperty(access = Access.READ_ONLY)
 	@ManyToOne
 	@JsonIgnoreProperties({"libros", "roles"})
 	private Usuario usuario;
