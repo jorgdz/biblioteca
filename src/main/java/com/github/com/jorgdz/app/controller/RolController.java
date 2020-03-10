@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.com.jorgdz.app.entity.Permiso;
 import com.github.com.jorgdz.app.entity.Rol;
 import com.github.com.jorgdz.app.service.IPermisoService;
 import com.github.com.jorgdz.app.service.IRolService;
@@ -240,45 +239,10 @@ public class RolController {
 			// UPDATE ROL
 			role.setId(id);
 			role.setNombre(rol.getNombre());
-			
-			if(permisos_id_req.length > 0 && permisos_id_req != null)
-			{
-				for (Long permiso : permisos_id_req) 
-				{
-					if(!Arrays.asList(permisos_id_data).contains(permiso))
-					{
-						// AÑADIENDO PERMISOS AL ROL
-						role.setPermisos(rol.getPermisos().stream().map(p -> servicePermiso.findById(p.getId())).collect(Collectors.toList()));
-					}
-				}
-			}
-			
-			// VERIFICO QUE LOS ROLES QUE ESTÁN EN LA DATA, TENGAN PERMISOS
-			if(!role.getPermisos().isEmpty())
-			{
-				//COMPRUEBO QUE NO ENVIO PERMISOS EN EL REQUEST PARA EL ROL SELECCIONADO
-				if(permisos_id_req.length == 0 || permisos_id_req == null)
-				{
-					for (Permiso permiso : role.getPermisos()) 
-					{
-						servicePermiso.deletePermisoRolById(id, permiso.getId());
-					}
-					
-					role.clear();
-				}
-				else
-				{
-					for (Permiso permiso : role.getPermisos()) 
-					{
-						if(!Arrays.asList(permisos_id_req).contains(permiso.getId()))
-						{
-							servicePermiso.deletePermisoRolById(id, permiso.getId());
-							role.removePermiso(permiso);
-						}
-					}
-				}
-			}
-					
+				
+			// AÑADIENDO PERMISOS AL ROL
+			role.setPermisos(rol.getPermisos().stream().map(p -> servicePermiso.findById(p.getId())).collect(Collectors.toList()));
+										
 			serviceRol.save(role);
 			updateRol = serviceRol.findById(id);
 		}

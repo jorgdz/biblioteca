@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.com.jorgdz.app.entity.Rol;
 import com.github.com.jorgdz.app.entity.Usuario;
 import com.github.com.jorgdz.app.service.IRolService;
 import com.github.com.jorgdz.app.service.IUsuarioService;
@@ -203,41 +202,7 @@ public class UsuarioController {
 			user.setCorreo(usuario.getCorreo());
 			user.setEnabled(usuario.isEnabled());
 			user.setClave(usuario.getClave());
-			
-			if(roles_req_id.length > 0 && roles_req_id != null) {
-				for (Long rolId : roles_req_id) 
-				{
-					if(!Arrays.asList(roles_data_id).contains(rolId))
-					{
-						// ADD ROL FOR USER
-						user.setRoles(usuario.getRoles().stream().map(u -> serviceRol.findById(u.getId())).collect(Collectors.toList()));
-					}
-				}
-			}
-			
-			if(!user.getRoles().isEmpty())
-			{
-				if(roles_req_id.length == 0 || roles_req_id == null)
-				{
-					// DELETE ALL ROLES FOR USER
-					for (Rol rol : user.getRoles()) {
-						serviceRol.deleteRolUsuarioById(id, rol.getId());
-					}
-					user.clear();
-				}
-				else
-				{
-					// BUG ENCONTRADO SI MANDO 1 ROL EN REQUEST Y EN DATA TENGO 3 ROLES ASIGNADOS ME MANDA UN ERROR
-					for (Rol rol : user.getRoles()) 
-					{
-						if(!Arrays.asList(roles_req_id).contains(rol.getId()))
-						{
-							serviceRol.deleteRolUsuarioById(id, rol.getId());
-							user.removeRol(rol);
-						}
-					}
-				}
-			}
+			user.setRoles(usuario.getRoles().stream().map(u -> serviceRol.findById(u.getId())).collect(Collectors.toList()));
 			
 			serviceUsuario.save(user);
 			updateUsuario = serviceUsuario.findById(id);
