@@ -2,7 +2,7 @@ package com.github.com.jorgdz.app.util;
 
 public class AppHelper {
 	
-	public static final String CROSS_ORIGIN = "http://localhost:4200";
+	public static final String CROSS_ORIGIN = "*";
 	public static final String JSON = "application/json;charset=UTF-8";
 	public static final String PREFIX = "/api";
 	

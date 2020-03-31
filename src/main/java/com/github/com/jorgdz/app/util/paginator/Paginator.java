@@ -9,9 +9,7 @@ public class Paginator <T> {
 	
 	private Page<T> pages;
 	
-	private int first;
-	
-	private  int last;
+	private int number;
 	
 	public Paginator (Page<T> pages)
 	{
@@ -33,7 +31,14 @@ public class Paginator <T> {
 	{
 		List<Integer> numbers = new ArrayList<Integer>();
 		
-		if (this.pages.getSize() >= this.pages.getTotalPages())
+		this.number = ((this.numberCurrentPage() + 1) > 5)  ? (this.numberCurrentPage() + 1) - 4 : 1;
+		
+		while(this.number <= ((this.numberCurrentPage() + 1) + 4) && this.number <= this.pages.getTotalPages())
+		{
+			numbers.add(this.number);
+			this.number ++;
+		}
+		/*if (this.pages.getSize() >= this.pages.getTotalPages())
 		{
 			this.first = 1;
 			this.last = this.pages.getTotalPages();
@@ -56,7 +61,7 @@ public class Paginator <T> {
 		for (int i = this.first; i <= this.last; i++) 
 		{
 			numbers.add(i);
-		}
+		}*/
 		
 		return numbers;
 	}

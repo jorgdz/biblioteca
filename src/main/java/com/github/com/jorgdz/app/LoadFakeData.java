@@ -68,6 +68,7 @@ public class LoadFakeData /*implements ApplicationListener<ContextRefreshedEvent
 				new Permiso("CREATE_USUARIOS", AppHelper.PREFIX.concat("/usuarios")),
 				new Permiso("UPDATE_USUARIOS", AppHelper.PREFIX.concat("/usuarios/**")),
 				new Permiso("EDITORIAL_BY_ID", AppHelper.PREFIX.concat("/editoriales/**")),
+				new Permiso("CREATE_EDITORIAL", AppHelper.PREFIX.concat("/editoriales")),
 				new Permiso("UPDATE_EDITORIAL", AppHelper.PREFIX.concat("/editoriales/**")),
 				new Permiso("DELETE_EDITORIAL", AppHelper.PREFIX.concat("/editoriales/**")));
 		

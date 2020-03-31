@@ -61,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.PUT, AppHelper.PREFIX.concat("/usuarios/**")).hasAuthority("UPDATE_USUARIOS")
 			.antMatchers(HttpMethod.PATCH, AppHelper.PREFIX.concat("/usuarios/**")).hasAuthority("UPDATE_USUARIOS")
 			.antMatchers(HttpMethod.GET, AppHelper.PREFIX.concat("/editoriales/**")).hasAuthority("EDITORIAL_BY_ID")
+			.antMatchers(HttpMethod.POST, AppHelper.PREFIX.concat("/editoriales")).hasAuthority("CREATE_EDITORIAL")
 			.antMatchers(HttpMethod.PUT, AppHelper.PREFIX.concat("/editoriales/**")).hasAuthority("UPDATE_EDITORIAL")
 			.antMatchers(HttpMethod.PATCH, AppHelper.PREFIX.concat("/editoriales/**")).hasAuthority("UPDATE_EDITORIAL")
 			.antMatchers(HttpMethod.DELETE, AppHelper.PREFIX.concat("/editoriales/**")).hasAuthority("DELETE_EDITORIAL")
